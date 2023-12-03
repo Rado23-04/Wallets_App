@@ -5,18 +5,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 public class ConnectionDatabase {
+    private final String url;
+    private final String userName;
+    private final String password;
 
+    public ConnectionDatabase() {
+        this.url = "jdbc:postgresql://" + System.getenv("DB_HOST") + ":" + System.getenv("DB_PORT") + "/" + System.getenv("DB_NAME");
+        this.userName = System.getenv("DB_USERNAME");
+        this.password = System.getenv("DB_PASSWORD");
+    }
 
-    public static void main(String[] args) {
-        String url = "jdbc:postgresql://localhost:5432/db_wallets";
-        String user = "postgres";
-        String password = "12345678";
-
-        try {
-            Connection connection = DriverManager.getConnection(url, user, password);
-            System.out.println("ok");
+    public Connection createConnection(){
+        try{
+            return DriverManager.getConnection(
+                    this.url, this.userName, this.password
+            );
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
